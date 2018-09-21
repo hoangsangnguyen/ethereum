@@ -7,7 +7,7 @@ import TabCampaign from '../components/TabCampaign';
 
 class CampaignIndex extends Component {
     static async getInitialProps() {
-        const campaigns = await factory.methods.getDeployedCampaign().call();
+        const campaigns = await factory.methods.getDeployedCampaign('art').call();
         return { campaigns };
     }
 

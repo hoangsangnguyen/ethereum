@@ -11,7 +11,7 @@ export default () => {
                         <a className="item" >Explore</a>
                     </Link>
                     
-                    <Link route="/">
+                    <Link route="/campaigns/new">
                         <a className="item" style={{marginLeft : '20px'}} >Start a project</a>
                     </Link>
 

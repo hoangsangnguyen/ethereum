@@ -15,15 +15,16 @@ beforeEach(async () => {
     accounts = await web3.eth.getAccounts();
 
     factory = await new web3.eth.Contract(JSON.parse(compiledFactory.interface))
-        .deploy({data : compiledFactory.bytecode})
-        .send({from : accounts[0], gas : '1000000'});
+        .deploy({ data: compiledFactory.bytecode })
+        .send({ from: accounts[0], gas: '3000000' });
+    console.log('Create campaign');
 
-    await factory.methods.createCampaign('100').send({
-        from : accounts[0],
-        gas : '1000000'
+    await factory.methods.createCampaign('abc', 'art', '100', 'def', '200', '10-10-2020', 'def').send({
+        from: accounts[0],
+        gas: '1000000'
     });
 
-    [campaignAddress] = await factory.methods.getDeployedCampaign().call();
+    [campaignAddress] = await factory.methods.getDeployedCampaign('art').call();
     campaign = await new web3.eth.Contract(
         JSON.parse(compiledCampaign.interface),
         campaignAddress
@@ -32,12 +33,12 @@ beforeEach(async () => {
 
 describe('Campaigns', () => {
     it('deploys a factory and a campaign', () => {
-        assert.ok(factory.options.address);
+       assert.ok(factory.options.address);
         assert.ok(campaign.options.address);
     });
 
     it('marks caller as the campaign manager', async () => {
-        const manager = await campaign.methods.manager().call();
+        const manager = await campaign.methods.mManager().call();
         assert.equal(accounts[0], manager);
     });
 
@@ -47,7 +48,7 @@ describe('Campaigns', () => {
             from : accounts[1]
         });
 
-        const isContributor = await campaign.methods.approvers(accounts[1]);
+        const isContributor = await campaign.methods.mInvestors(accounts[1]);
         assert(isContributor);
     });
 
@@ -71,9 +72,9 @@ describe('Campaigns', () => {
                 from : accounts[0],
                 gas : '1000000'
             });
-        const request = await campaign.methods.requests(0).call();
+        const request = await campaign.methods.mRequests(0).call();
 
-        assert.equal('Buy something', request.description);
+        assert.equal('Buy something', request.requestDescription);
     });
 
     it('processes requests', async () => {

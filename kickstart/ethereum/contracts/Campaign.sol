@@ -1,16 +1,16 @@
 pragma solidity ^0.4.17;
 
 contract CampaignFactory {
-    address[] public deployedCampaigns;
+    mapping(string => address[]) deployedCampaigns;
     
-    function createCampaign(uint minimum, string description, uint goal, string deadline,
+    function createCampaign(string title, string category, uint minimum, string description, uint goal, string deadline,
         string investmentDescription ) public {
-        address newCampaign = new Campaign(msg.sender, minimum, description, goal, deadline, investmentDescription);
-        deployedCampaigns.push(newCampaign);
+        address newCampaign = new Campaign(msg.sender, title, category, minimum, description, goal, deadline, investmentDescription);
+        deployedCampaigns[category].push(newCampaign);
     }
     
-    function getDeployedCampaign() public view returns (address[]) {
-        return deployedCampaigns;
+    function getDeployedCampaign(string category) public view returns (address[]) {
+        return deployedCampaigns[category];
     }
 }
 
@@ -32,7 +32,9 @@ contract Campaign {
     }
     
     address public mManager;
+    string public mTitle;
     string public mDescription;
+    string public mCategory;
     uint public mMinimumContribution;
     uint public mGoal;
     string public mDeadline;
@@ -53,9 +55,11 @@ contract Campaign {
         _;
     }
     
-    constructor(address creator, uint minimum, string description, uint goal, string deadline,
+    constructor(address creator, string title, string category, uint minimum, string description, uint goal, string deadline,
         string investmentDescription) public {
         mManager = creator;
+        mTitle = title;
+        mCategory = category;
         mMinimumContribution = minimum;
         mDescription = description;
         mGoal = goal;
