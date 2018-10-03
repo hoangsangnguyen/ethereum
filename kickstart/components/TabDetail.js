@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Image, Grid, Card } from 'semantic-ui-react';
+import { Container, Image, Grid, Card, Icon } from 'semantic-ui-react';
 import { Link } from '../routes';
 import OverviewCampaign from './Home/OverviewCampaign';
 import CampaignList from './Home/CampaignList';
@@ -8,82 +8,57 @@ import Campaign from '../ethereum/campaign';
 
 class TabDetail extends Component {
     state = {
-        campaigns : []
+        campaigns: []
     };
-    
-    async componentWillReceiveProps(nextProps){
-        console.log("recei", this.props, nextProps.campaigns)
-        if ( this.props.campaigns !== nextProps.campaigns) {
-        console.log(this.props !== nextProps)
-            
-            let campaigns = await nextProps.campaigns.campaigns.map( async (address, i) => {
+
+    async componentWillReceiveProps(nextProps) {
+        if (this.props.campaigns !== nextProps.campaigns) {
+            console.log(this.props !== nextProps)
+
+            let campaigns = await nextProps.campaigns.campaigns.map(async (address, i) => {
                 const campaign = Campaign(address);
                 let title = await campaign.methods.mTitle().call();
                 let imageUrl = await campaign.methods.mImageFile().call();
-            // console.log("333333333333333333333", address)
                 return {
-                    title : title,
-                    imageUrl : imageUrl,
-                    address : address
+                    title: title,
+                    imageUrl: imageUrl,
+                    address: address
                 }
             });
-    
-            // console.log("4444444444444444444444", campaigns)
+
             Promise.all(campaigns).then((completed) => {
-                // console.log('After run didMount : ', completed)
-                this.setState({campaigns : completed});
+                this.setState({ campaigns: completed });
             });
         }
-        
-       
+
+    }
+
+    handleClick = (e) => {
+        console.log('Click ', e)
     }
 
     renderCampaigns() {
-        // console.log(this.state.campaigns);
-            let items = this.state.campaigns.map( (campaign, i) => {
-                return {
-                    header: campaign.title,
-                    description: (
-                        // <Link route={`/campaigns/${address}`}>
-                            <a>{campaign.address}</a>
-                        // </Link>
-                    ),
-                    fluid: true
-                }
-            });
+        let items = []
+        this.state.campaigns.map((campaign, i) => {
+            items.push({
+                image: { src: campaign.imageUrl, width: '100%', height: '200px' },
+                header: campaign.title,
+                description: (
+                    campaign.address
+                ),
+                href : `/campaigns/${campaign.address}`
+            })
+        });
 
-            return <Card.Group items={items} />;
-        }
+        return <Card.Group items={items} itemsPerRow={3} centered />;
+    }
+
     
+
     render() {
-        console.log("111111111111111111111111111", this.state.campaigns)
         return (
-
             <Container style={{ marginTop: '29px' }}>
-                <a style={{ fontSize: '30px' }}></a>
-
-                <Link route={`/`}>
-                    <a style={{ marginLeft: '20px' }}>View all</a>
-                </Link>
-                <i aria-hidden='true' class='arrow right disabled icon' />
-
-                <br />
-
-                <h5>FEATURED PROJECT</h5>
-
-                {/* <Grid>
-                    <Grid.Row>
-                        <Grid.Column width={8}>
-                            <OverviewCampaign address={main} />
-                        </Grid.Column>
-                        <Grid.Column width={8}>
-                            <CampaignList />
-                        </Grid.Column>
-                    </Grid.Row>
-                </Grid> */}
                 {this.renderCampaigns()}
-
-
             </Container>
         );
     }

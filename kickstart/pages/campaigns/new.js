@@ -36,42 +36,34 @@ class CampaignNew extends Component {
         {
             text: 'Art',
             value: 'art',
-            image: { avatar: true, src: 'https://ethereum.org/images/wallpaper-homestead.jpg' },
         },
         {
             text: 'Design & Tech',
             value: 'design-tech',
-            image: { avatar: true, src: 'https://ethereum.org/images/wallpaper-homestead.jpg' },
         },
         {
             text: 'Comics & Illustration',
             value: 'comics-illustration',
-            image: { avatar: true, src: 'https://ethereum.org/images/wallpaper-homestead.jpg' },
         },
         {
             text: 'Games',
             value: 'games',
-            image: { avatar: true, src: 'https://ethereum.org/images/wallpaper-homestead.jpg' },
         },
         {
             text: 'Food & Craft',
             value: 'food-craft',
-            image: { avatar: true, src: 'https://ethereum.org/images/wallpaper-homestead.jpg' },
         },
         {
             text: 'Music',
             value: 'music',
-            image: { avatar: true, src: 'https://ethereum.org/images/wallpaper-homestead.jpg' },
         },
         {
             text: 'Publishing',
             value: 'publishing',
-            image: { avatar: true, src: 'https://ethereum.org/images/wallpaper-homestead.jpg' },
         },
         {
             text: 'Film',
             value: 'film',
-            image: { avatar: true, src: 'https://ethereum.org/images/wallpaper-homestead.jpg' },
         },
     ]
 
