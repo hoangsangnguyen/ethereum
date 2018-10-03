@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
-import { Button, Form, Input, Message, Checkbox, FormGroup, Dropdown } from 'semantic-ui-react';
+import { Button, Form, Input, Message, Checkbox, FormGroup, Dropdown, Container, Embed } from 'semantic-ui-react';
+import { Player } from 'video-react';
 import Layout from '../../components/Layout';
 import factory from '../../ethereum/factory';
 import web3 from '../../ethereum/web3';
 import { Router } from '../../routes';
 import { Common } from '../../utils/common';
+import axios from 'axios';
+import ReactPlayer from 'react-player';
+
 import {
     DateInput,
     TimeInput,
@@ -21,8 +25,11 @@ class CampaignNew extends Component {
         description: '',
         minimumContribution: '',
         goal: '',
-        deadline: '',
-        investmentDescription: ''
+        investmentDescription: '',
+        imageFile: '',
+        imagePreviewUrl: '',
+        videoFile: '',
+        videoPreviewUrl: '',
     };
 
     categories = [
@@ -32,8 +39,38 @@ class CampaignNew extends Component {
             image: { avatar: true, src: 'https://ethereum.org/images/wallpaper-homestead.jpg' },
         },
         {
-            text: 'Artr',
-            value: 'artr',
+            text: 'Design & Tech',
+            value: 'design-tech',
+            image: { avatar: true, src: 'https://ethereum.org/images/wallpaper-homestead.jpg' },
+        },
+        {
+            text: 'Comics & Illustration',
+            value: 'comics-illustration',
+            image: { avatar: true, src: 'https://ethereum.org/images/wallpaper-homestead.jpg' },
+        },
+        {
+            text: 'Games',
+            value: 'games',
+            image: { avatar: true, src: 'https://ethereum.org/images/wallpaper-homestead.jpg' },
+        },
+        {
+            text: 'Food & Craft',
+            value: 'food-craft',
+            image: { avatar: true, src: 'https://ethereum.org/images/wallpaper-homestead.jpg' },
+        },
+        {
+            text: 'Music',
+            value: 'music',
+            image: { avatar: true, src: 'https://ethereum.org/images/wallpaper-homestead.jpg' },
+        },
+        {
+            text: 'Publishing',
+            value: 'publishing',
+            image: { avatar: true, src: 'https://ethereum.org/images/wallpaper-homestead.jpg' },
+        },
+        {
+            text: 'Film',
+            value: 'film',
             image: { avatar: true, src: 'https://ethereum.org/images/wallpaper-homestead.jpg' },
         },
     ]
@@ -47,6 +84,13 @@ class CampaignNew extends Component {
     onSubmit = async (event) => {
         event.preventDefault();
         this.setState({ loading: true, errorMessage: '' });
+        console.log('name ' + this.state.name + ' \ncategory : ' + this.state.category
+        + '\nMinimum : ' + this.state.minimumContribution
+        + '\nDes : ' + this.state.description
+        + '\nGoal : ' + this.state.goal
+        + '\nInvestDes : ' + this.state.investmentDescription)
+        + '\nImageFile : ' + this.state.imagePreviewUrl
+        + '\nVideoFile : ' + this.state.videoPreviewUrl;
 
         try {
             const accounts = await web3.eth.getAccounts();
@@ -57,8 +101,9 @@ class CampaignNew extends Component {
                     this.state.category,
                     web3.utils.toWei(this.state.minimumContribution, 'ether'),
                     this.state.description,
+                    'https://pbs.twimg.com/profile_images/626149701189042177/LWpxKEv3_400x400.png',
+                    'https://www.youtube.com/watch?v=1njYc9ZO6WQ',
                     web3.utils.toWei(this.state.goal, 'ether'),
-                    this.state.deadline,
                     this.state.investmentDescription)
                 .send({
                     from: accounts[0]
@@ -71,42 +116,100 @@ class CampaignNew extends Component {
         }
         this.setState({ loading: false });
 
-        console.log('name ' + this.state.name + ' \ncategory : ' + this.state.category
-            + '\nMinimum : ' + this.state.minimumContribution
-            + '\nDes : ' + this.state.description
-            + '\nGoal : ' + this.state.goal
-            + '\nDeadline : ' + this.state.deadline
-            + '\nInvestDes : ' + this.state.investmentDescription);
+      
 
     };
 
+    _handleDeleteImage(e) {
+        e.preventDefault();
+        this.setState({ imageFile: '', imagePreviewUrl: '' });
+    }
+
+    _handleDeleteVideo(e) {
+        e.preventDefault();
+        this.setState({ videoFile: '', videoPreviewUrl: '' });
+    }
+
+    async _handleImageChange(e) {
+        e.preventDefault();
+
+        let reader = new FileReader();
+        let file = e.target.files[0];
+
+        reader.onloadend = async () => {
+            await this.setState({
+                imageFile: file,
+                imagePreviewUrl: reader.result
+            });
+        };
+
+        reader.readAsDataURL(file)
+    }
+
+    _handleVideoChange(e) {
+        e.preventDefault();
+
+        let reader = new FileReader();
+        let file = e.target.files[0];
+
+        reader.onloadend = () => {
+            this.setState({
+                videoFile: file,
+                videoPreviewUrl: reader.result
+            });
+        }
+
+
+        reader.readAsDataURL(file)
+    }
+
     render() {
+        console.log('image file : ', this.state.imagePreviewUrl);
+        console.log('video file : ', this.state.videoPreviewUrl);
+
+        let { imagePreviewUrl } = this.state;
+        let $imagePreview = null;
+        if (imagePreviewUrl) {
+            $imagePreview = (
+                <Container>
+                    <img
+                        src={imagePreviewUrl}
+                        height='300px'
+                        width='300px' />
+                    <br />
+                    <Button
+                        basic color='red'
+                        onClick={(e) => this._handleDeleteImage(e)}>Delete Image</Button>
+
+                </Container>
+            );
+        } else {
+            //$imagePreview = (<div className="previewText">Please select an Image for Preview</div>);
+        }
+
+        let { videoPreviewUrl } = this.state;
+        let $videoPreview = null;
+        if (videoPreviewUrl) {
+            $videoPreview = (
+                <Container>
+                    <ReactPlayer url={videoPreviewUrl} controls />
+                    <br />
+                    <Button
+                        basic color='red'
+                        onClick={(e) => this._handleDeleteVideo(e)}>Delete Video</Button>
+
+                </Container>
+            );
+        } else {
+            //$imagePreview = (<div className="previewText">Please select an Image for Preview</div>);
+        }
+
         return (
-
-            // <Layout>
-            //     <h3>Create a Campaign</h3>
-            //     <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
-            //         <Form.Field>
-            //             <label>Minimum Contribution</label>
-            //             <Input 
-            //                 label="wei"
-            //                 labelPosition="right"
-            //                 value = {this.state.minimumContribution}
-            //                 onChange= {event => 
-            //                     this.setState({minimumContribution : event.target.value})}
-            //                 />
-            //         </Form.Field>
-
-            //         <Message error header="Oops!" content={this.state.errorMessage}/>
-            //         <Button loading={this.state.loading} primary>Create!</Button>
-            //     </Form>
-
-            // </Layout>
             <Layout>
                 <h5>Create new campaign</h5>
 
                 <Form className="segment" onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
-                    
+
                     <Form.Field>
                         <label>Category</label>
                         <Dropdown placeholder='Select Friend'
@@ -155,15 +258,18 @@ class CampaignNew extends Component {
                                 this.setState({ goal: event.target.value })}
                         />
                     </Form.Field>
-                    
-                    <DateInput
-                        name="deadline"
-                        placeholder="Date"
-                        value={this.state.deadline}
-                        iconPosition="left"
-                        onChange={(event, { value }) =>
-                        this.setState({ deadline: value })} />
-                    
+
+                    {/* <Form.Field>
+                        <label>Deadline</label>
+                        <DateInput
+                            name="deadline"
+                            placeholder="Date"
+                            value={this.state.deadline}
+                            iconPosition="left"
+                            onChange={(event, { value }) =>
+                                this.setState({ deadline: value })} />
+                    </Form.Field> */}
+
                     <Form.Field>
                         <label>Investment Description</label>
                         <Input
@@ -174,9 +280,35 @@ class CampaignNew extends Component {
                     </Form.Field>
 
                     <Form.Field>
+                        <label>Image</label>
+                        <input className="fileInput"
+                            type="file"
+                            onChange={(e) => this._handleImageChange(e)} />
+
+                        <div className="imgPreview">
+                            {$imagePreview}
+                        </div>
+                    </Form.Field>
+
+                    <Form.Field>
+                        <label>Video</label>
+                        <input className="fileInput"
+                            type="file"
+                            onChange={(e) => this._handleVideoChange(e)} />
+
+                        <div className="videoPreview">
+                            {$videoPreview}
+                        </div>
+                    </Form.Field>
+
+                    <Form.Field>
                         <Checkbox label='I agree to the Terms and Conditions' />
                     </Form.Field>
-                    <Button >Submit</Button>
+
+                    <Message error header="Oops!" content={this.state.errorMessage} />
+
+
+                    <Button primary>Create</Button>
                 </Form>
             </Layout>
         );

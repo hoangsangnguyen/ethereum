@@ -3,11 +3,12 @@ pragma solidity ^0.4.17;
 contract CampaignFactory {
     mapping(string => address[]) deployedCampaigns;
     
-    function createCampaign(string title, string category, uint minimum, string description, uint goal, string deadline,
-        string investmentDescription ) public {
-        address newCampaign = new Campaign(msg.sender, title, category, minimum, description, goal, deadline, investmentDescription);
+    function createCampaign(string title, string category, uint minimum, string description, string imageFile, string videoFile,
+        uint goal, string investmentDescription) public {
+        address newCampaign = new Campaign(msg.sender, title, category, minimum, description, imageFile, videoFile, goal, investmentDescription);
         deployedCampaigns[category].push(newCampaign);
     }
+    
     
     function getDeployedCampaign(string category) public view returns (address[]) {
         return deployedCampaigns[category];
@@ -34,10 +35,11 @@ contract Campaign {
     address public mManager;
     string public mTitle;
     string public mDescription;
+    string public mImageFile;
+    string public mVideoFile;    
     string public mCategory;
     uint public mMinimumContribution;
     uint public mGoal;
-    string public mDeadline;
     string public mInvestmentDescription;
     
     Request[] public mRequests;
@@ -55,16 +57,17 @@ contract Campaign {
         _;
     }
     
-    constructor(address creator, string title, string category, uint minimum, string description, uint goal, string deadline,
-        string investmentDescription) public {
+    constructor(address creator, string title, string category, uint minimum, string description, string imageFile, string videoFile, uint goal, string investmentDescription) public {
         mManager = creator;
         mTitle = title;
         mCategory = category;
         mMinimumContribution = minimum;
         mDescription = description;
+        mImageFile = imageFile;
+        mVideoFile = videoFile;
         mGoal = goal;
-        mDeadline = deadline;
         mInvestmentDescription = investmentDescription;
+  
     }
     
     function contribute() public payable {
@@ -82,6 +85,10 @@ contract Campaign {
             mInvestorsCount++;
         }
         
+    }
+    
+    function updateInvestmentDetail (string investmentDescription) public restricted {
+        mInvestmentDescription = investmentDescription;
     }
     
     function createRequest(string requestDescription, uint value, address recipient) public payable restricted {

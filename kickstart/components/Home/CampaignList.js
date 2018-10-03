@@ -11,7 +11,6 @@ const CampaignList = (props) => {
         let campaign = { url: 'abc', name: 'def' };
         list.push(campaign);
     }
-    console.log(list);
 
     const campaignItems = list.map((campaign) => {
         return (

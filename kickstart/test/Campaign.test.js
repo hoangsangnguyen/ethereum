@@ -19,16 +19,18 @@ beforeEach(async () => {
         .send({ from: accounts[0], gas: '3000000' });
     console.log('Create campaign');
 
-    await factory.methods.createCampaign('abc', 'art', '100', 'def', '200', '10-10-2020', 'def').send({
+    await factory.methods.createCampaign('abc', 'art', '100', 'def', 'imageFile', 'videoFile',
+        '20000', 'def').send({
         from: accounts[0],
         gas: '1000000'
     });
-
     [campaignAddress] = await factory.methods.getDeployedCampaign('art').call();
+
     campaign = await new web3.eth.Contract(
         JSON.parse(compiledCampaign.interface),
         campaignAddress
     );
+
 });
 
 describe('Campaigns', () => {

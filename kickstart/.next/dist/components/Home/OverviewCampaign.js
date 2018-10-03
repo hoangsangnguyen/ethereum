@@ -53,91 +53,85 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var _jsxFileName = 'D:\\Workspace\\Blockchain\\Ethereum-kickstarter\\ethereum\\kickstart\\components\\Home\\OverviewCampaign.js';
 
 
+// const OverviewCampaign = (props) => {
+//     const campaign = Campaign(props.address);
+//     console.log('Campaign in detail : ', campaign);
+//     if (campaign.options.address == null)
+//         return null;
+//     const imageFile = campaign.methods.mImageFile().call();
+//     console.log('Campaign in detail : ', imageFile);
+//     return (
+//         <Container>
+//             <Image
+//                 src={imageFile}
+//                 as='a'
+//                 size='big'
+//                 href='http://google.com'
+//                 target='_blank'
+//             />
+
+//             <br />
+
+//             <Link route={`/`}>
+//                 <a>An American Requiem</a>
+//             </Link>
+
+//             <br />
+
+//             <Link route={`/`}>
+//                 <a>BY KAREEN M.LUCAS</a>
+//             </Link>
+
+//             <br />
+
+//             <Link route={`/`}>
+//                 <a>37%</a>
+//             </Link>
+
+//         </Container>
+
+//     );
+
+// }
+
 var OverviewCampaign = function (_Component) {
     (0, _inherits3.default)(OverviewCampaign, _Component);
 
     function OverviewCampaign() {
+        var _ref;
+
+        var _temp, _this, _ret;
+
         (0, _classCallCheck3.default)(this, OverviewCampaign);
 
-        return (0, _possibleConstructorReturn3.default)(this, (OverviewCampaign.__proto__ || (0, _getPrototypeOf2.default)(OverviewCampaign)).apply(this, arguments));
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = OverviewCampaign.__proto__ || (0, _getPrototypeOf2.default)(OverviewCampaign)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+            imageUrl: ''
+        }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
     }
 
     (0, _createClass3.default)(OverviewCampaign, [{
-        key: 'render',
-        value: function render() {
-            return _react2.default.createElement(_semanticUiReact.Container, {
-                __source: {
-                    fileName: _jsxFileName,
-                    lineNumber: 17
-                }
-            }, _react2.default.createElement(_semanticUiReact.Image, {
-                src: 'https://ethereum.org/images/wallpaper-homestead.jpg',
-                as: 'a',
-                size: 'big',
-                href: 'http://google.com',
-                target: '_blank',
-                __source: {
-                    fileName: _jsxFileName,
-                    lineNumber: 18
-                }
-            }), _react2.default.createElement('br', {
-                __source: {
-                    fileName: _jsxFileName,
-                    lineNumber: 26
-                }
-            }), _react2.default.createElement(_routes.Link, { route: '/', __source: {
-                    fileName: _jsxFileName,
-                    lineNumber: 28
-                }
-            }, _react2.default.createElement('a', {
-                __source: {
-                    fileName: _jsxFileName,
-                    lineNumber: 29
-                }
-            }, 'An American Requiem')), _react2.default.createElement('br', {
-                __source: {
-                    fileName: _jsxFileName,
-                    lineNumber: 32
-                }
-            }), _react2.default.createElement(_routes.Link, { route: '/', __source: {
-                    fileName: _jsxFileName,
-                    lineNumber: 34
-                }
-            }, _react2.default.createElement('a', {
-                __source: {
-                    fileName: _jsxFileName,
-                    lineNumber: 35
-                }
-            }, 'BY KAREEN M.LUCAS')), _react2.default.createElement('br', {
-                __source: {
-                    fileName: _jsxFileName,
-                    lineNumber: 38
-                }
-            }), _react2.default.createElement(_routes.Link, { route: '/', __source: {
-                    fileName: _jsxFileName,
-                    lineNumber: 40
-                }
-            }, _react2.default.createElement('a', {
-                __source: {
-                    fileName: _jsxFileName,
-                    lineNumber: 41
-                }
-            }, '37%')));
-        }
-    }], [{
-        key: 'getInitialProps',
+        key: 'componentDidMount',
         value: function () {
-            var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
-                var address, campaign;
+            var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
+                var campaign, imageUrl;
                 return _regenerator2.default.wrap(function _callee$(_context) {
                     while (1) {
                         switch (_context.prev = _context.next) {
                             case 0:
-                                address = props.address.address;
-                                campaign = (0, _campaign2.default)(address);
-                                return _context.abrupt('return', { campaign: campaign });
+                                campaign = (0, _campaign2.default)(this.props.address);
+                                _context.next = 3;
+                                return campaign.methods.mImageFile().call();
 
                             case 3:
+                                imageUrl = _context.sent;
+
+                                this.setState({ imageUrl: imageUrl });
+
+                            case 5:
                             case 'end':
                                 return _context.stop();
                         }
@@ -145,16 +139,80 @@ var OverviewCampaign = function (_Component) {
                 }, _callee, this);
             }));
 
-            function getInitialProps() {
-                return _ref.apply(this, arguments);
+            function componentDidMount() {
+                return _ref2.apply(this, arguments);
             }
 
-            return getInitialProps;
+            return componentDidMount;
         }()
+    }, {
+        key: 'render',
+        value: function render() {
+            console.log('Image url : ', this.state.imageUrl);
+
+            return _react2.default.createElement(_semanticUiReact.Container, {
+                __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 63
+                }
+            }, _react2.default.createElement(_semanticUiReact.Image, {
+                src: this.state.imageUrl,
+                as: 'a',
+                size: 'big',
+                href: 'http://google.com',
+                target: '_blank',
+                __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 64
+                }
+            }), _react2.default.createElement('br', {
+                __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 72
+                }
+            }), _react2.default.createElement(_routes.Link, { route: '/', __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 74
+                }
+            }, _react2.default.createElement('a', {
+                __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 75
+                }
+            }, 'An American Requiem')), _react2.default.createElement('br', {
+                __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 78
+                }
+            }), _react2.default.createElement(_routes.Link, { route: '/', __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 80
+                }
+            }, _react2.default.createElement('a', {
+                __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 81
+                }
+            }, 'BY KAREEN M.LUCAS')), _react2.default.createElement('br', {
+                __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 84
+                }
+            }), _react2.default.createElement(_routes.Link, { route: '/', __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 86
+                }
+            }, _react2.default.createElement('a', {
+                __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 87
+                }
+            }, '37%')));
+        }
     }]);
 
     return OverviewCampaign;
 }(_react.Component);
 
 exports.default = OverviewCampaign;
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNvbXBvbmVudHNcXEhvbWVcXE92ZXJ2aWV3Q2FtcGFpZ24uanMiXSwibmFtZXMiOlsiUmVhY3QiLCJDb21wb25lbnQiLCJJbWFnZSIsIkNvbnRhaW5lciIsIkNhbXBhaWduIiwid2ViMyIsIkxpbmsiLCJPdmVydmlld0NhbXBhaWduIiwiYWRkcmVzcyIsInByb3BzIiwiY2FtcGFpZ24iXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7QUFBQSxBQUFPLEFBQVM7Ozs7QUFDaEIsQUFBUyxBQUFPOztBQUNoQixBQUFPLEFBQWM7Ozs7QUFDckIsQUFBTyxBQUFVOzs7O0FBQ2pCLEFBQVMsQUFBWTs7Ozs7OztJQUVmLEE7Ozs7Ozs7Ozs7O2lDQVFPLEFBQ0w7bUNBQ0ksQUFBQzs7OEJBQUQ7Z0NBQUEsQUFDSTtBQURKO0FBQUEsYUFBQSxrQkFDSSxBQUFDO3FCQUFELEFBQ1EsQUFDSjtvQkFGSixBQUVPLEFBQ0g7c0JBSEosQUFHUyxBQUNMO3NCQUpKLEFBSVMsQUFDTDt3QkFMSixBQUtXOzs4QkFMWDtnQ0FESixBQUNJLEFBUUE7QUFSQTtBQUNJOzs4QkFPSjtnQ0FUSixBQVNJLEFBRUE7QUFGQTtBQUFBLGdDQUVBLEFBQUMsOEJBQUssT0FBTjs4QkFBQTtnQ0FBQSxBQUNJO0FBREo7K0JBQ0ksY0FBQTs7OEJBQUE7Z0NBQUE7QUFBQTtBQUFBLGVBWlIsQUFXSSxBQUNJLEFBR0o7OzhCQUFBO2dDQWZKLEFBZUksQUFFQTtBQUZBO0FBQUEsZ0NBRUEsQUFBQyw4QkFBSyxPQUFOOzhCQUFBO2dDQUFBLEFBQ0k7QUFESjsrQkFDSSxjQUFBOzs4QkFBQTtnQ0FBQTtBQUFBO0FBQUEsZUFsQlIsQUFpQkksQUFDSSxBQUdKOzs4QkFBQTtnQ0FyQkosQUFxQkksQUFFQTtBQUZBO0FBQUEsZ0NBRUEsQUFBQyw4QkFBSyxPQUFOOzhCQUFBO2dDQUFBLEFBQ0k7QUFESjsrQkFDSSxjQUFBOzs4QkFBQTtnQ0FBQTtBQUFBO0FBQUEsZUF6QlosQUFDSSxBQXVCSSxBQUNJLEFBT2Y7Ozs7Ozs7Ozs7aUNBdkNXO0EsMENBQVksTUFBTSxBLFFBQWxCLEEsQUFDRjtBLDJDQUFXLHdCLEFBQUEsQUFBUztpRUFDbkIsRUFBRSxVQUFGLEE7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7QUFKZ0IsQSxBQStDL0I7O2tCQUFBLEFBQWUiLCJmaWxlIjoiT3ZlcnZpZXdDYW1wYWlnbi5qcyIsInNvdXJjZVJvb3QiOiJEOi9Xb3Jrc3BhY2UvQmxvY2tjaGFpbi9FdGhlcmV1bS1raWNrc3RhcnRlci9ldGhlcmV1bS9raWNrc3RhcnQifQ==
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNvbXBvbmVudHNcXEhvbWVcXE92ZXJ2aWV3Q2FtcGFpZ24uanMiXSwibmFtZXMiOlsiUmVhY3QiLCJDb21wb25lbnQiLCJJbWFnZSIsIkNvbnRhaW5lciIsIkNhbXBhaWduIiwid2ViMyIsIkxpbmsiLCJPdmVydmlld0NhbXBhaWduIiwic3RhdGUiLCJpbWFnZVVybCIsImNhbXBhaWduIiwicHJvcHMiLCJhZGRyZXNzIiwibWV0aG9kcyIsIm1JbWFnZUZpbGUiLCJjYWxsIiwic2V0U3RhdGUiLCJjb25zb2xlIiwibG9nIl0sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBQUEsQUFBTyxBQUFTOzs7O0FBQ2hCLEFBQVMsQUFBTzs7QUFDaEIsQUFBTyxBQUFjOzs7O0FBQ3JCLEFBQU8sQUFBVTs7OztBQUNqQixBQUFTLEFBQVk7Ozs7Ozs7QUFFckI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7O0FBRUE7QUFDQTtBQUNBOztBQUVBOztBQUVBO0FBQ0E7QUFDQTs7QUFFQTs7QUFFQTtBQUNBO0FBQ0E7O0FBRUE7O0FBRUE7O0FBRUE7O0lBRU0sQTs7Ozs7Ozs7Ozs7Ozs7b08sQUFDRjtzQkFBUSxBLEFBQ087QUFEUCxBQUNKOzs7Ozs7Ozs7OztpQ0FJTTtBLDJDQUFXLHdCQUFTLEtBQUEsQUFBSyxNQUFkLEEsQUFBb0I7O3VDQUNkLFNBQUEsQUFBUyxRQUFULEFBQWlCLGFBQWEsQSxBQUE5Qjs7aUNBQWpCO0Esb0RBQ047O3FDQUFBLEFBQUssU0FBUyxFQUFDLFVBQWYsQUFBYzs7Ozs7Ozs7Ozs7Ozs7Ozs7O2lDQUdULEFBQ0w7b0JBQUEsQUFBUSxJQUFSLEFBQVksZ0JBQWdCLEtBQUEsQUFBSyxNQUFqQyxBQUF1QyxBQUV2Qzs7bUNBQ0ksQUFBQzs7OEJBQUQ7Z0NBQUEsQUFDSTtBQURKO0FBQUEsYUFBQSxrQkFDSSxBQUFDO3FCQUNRLEtBQUEsQUFBSyxNQURkLEFBQ29CLEFBQ2hCO29CQUZKLEFBRU8sQUFDSDtzQkFISixBQUdTLEFBQ0w7c0JBSkosQUFJUyxBQUNMO3dCQUxKLEFBS1c7OzhCQUxYO2dDQURKLEFBQ0ksQUFRQTtBQVJBO0FBQ0k7OzhCQU9KO2dDQVRKLEFBU0ksQUFFQTtBQUZBO0FBQUEsZ0NBRUEsQUFBQyw4QkFBSyxPQUFOOzhCQUFBO2dDQUFBLEFBQ0k7QUFESjsrQkFDSSxjQUFBOzs4QkFBQTtnQ0FBQTtBQUFBO0FBQUEsZUFaUixBQVdJLEFBQ0ksQUFHSjs7OEJBQUE7Z0NBZkosQUFlSSxBQUVBO0FBRkE7QUFBQSxnQ0FFQSxBQUFDLDhCQUFLLE9BQU47OEJBQUE7Z0NBQUEsQUFDSTtBQURKOytCQUNJLGNBQUE7OzhCQUFBO2dDQUFBO0FBQUE7QUFBQSxlQWxCUixBQWlCSSxBQUNJLEFBR0o7OzhCQUFBO2dDQXJCSixBQXFCSSxBQUVBO0FBRkE7QUFBQSxnQ0FFQSxBQUFDLDhCQUFLLE9BQU47OEJBQUE7Z0NBQUEsQUFDSTtBQURKOytCQUNJLGNBQUE7OzhCQUFBO2dDQUFBO0FBQUE7QUFBQSxlQXpCWixBQUNJLEFBdUJJLEFBQ0ksQUFPZjs7Ozs7QUE5QzBCLEEsQUFvRC9COztrQkFBQSxBQUFlIiwiZmlsZSI6Ik92ZXJ2aWV3Q2FtcGFpZ24uanMiLCJzb3VyY2VSb290IjoiRDovV29ya3NwYWNlL0Jsb2NrY2hhaW4vRXRoZXJldW0ta2lja3N0YXJ0ZXIvZXRoZXJldW0va2lja3N0YXJ0In0=

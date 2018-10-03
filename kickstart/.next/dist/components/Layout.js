@@ -37,7 +37,7 @@ exports.default = function (props) {
             fileName: _jsxFileName,
             lineNumber: 10
         }
-    }), _react2.default.createElement('link', { rel: 'stylesheet', href: '/style/style.css', __source: {
+    }), _react2.default.createElement('link', { rel: 'stylesheet', href: '../style/style.css', __source: {
             fileName: _jsxFileName,
             lineNumber: 11
         }
