@@ -126,5 +126,21 @@ contract Campaign {
         request.complete = true;
         
     }
+
+    function getCampaignInfo() public returns (address manager,
+                                string title, string description,
+                                string videoFile, uint minimumContribution,
+                                uint goal, string investmentDescription){
+        return (
+            mManager,
+            mTitle, 
+            mDescription,
+            mVideoFile,
+            mMinimumContribution,
+            mGoal,
+            mInvestmentDescription
+        );
+    }
+
 }
 

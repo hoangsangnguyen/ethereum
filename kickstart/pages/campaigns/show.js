@@ -1,73 +1,112 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Layout from '../../components/Layout';
 import Campaign from '../../ethereum/campaign';
-import { Card, Grid, Button } from 'semantic-ui-react';
+import { Card, Grid, Button, Embed, Divider } from 'semantic-ui-react';
 import web3 from '../../ethereum/web3';
 import ContributeForm from '../../components/ContributeFrom';
-import {Link} from '../../routes';
+import { Link } from '../../routes';
+import TabCampaign from '../../components/Detail/TabCampaign';
+
 
 class CampaignShow extends Component {
-    static async getInitialProps(props) {
-        const campaign = Campaign(props.query.address);
-        const summary = await campaign.methods.getSummary().call();
-
-        return {
-            address : props.query.address,
-            minimumContribution : summary[0],
-            balance : summary[1],
-            requestsCount : summary[2],
-            approversCount : summary[3],
-            manager : summary[4]
-        };
+    state = {
+        manager: '',
+        title: '',
+        description: '',
+        videoUrl: '',
+        videoUrl : '',
+        minimumContribution: '',
+        goal: '',
+        campaign: '',
+        address: ''
     }
 
-    renderCard(){
-        const {
-            balance,
-            manager, 
-            minimumContribution,
-            requestsCount,
-            approversCount
-        } = this.props;
+    async componentDidMount() {
+        const campaign = Campaign(this.props.url.query.address)
+        const info = await campaign.methods.getCampaignInfo().call();
 
-        const items = [
-            {
-                header : manager,
-                meta : 'Address of Manager',
-                description : 'The manager created this campaign and can create request',
-                style: {overflowWrap : 'break-word'}
-            },
-            {
-                header : minimumContribution,
-                meta : 'Minimum Contribution (wei)',
-                description : 'You must contribute at least this much wei to become an approver',
+        const videoId = this.YouTubeGetID(info['videoFile']);
 
-            },
-            {
-                header : requestsCount,
-                meta : 'Numer of Requests',
-                description : 'A request tries to withdraw money from the contract. Requests must be approved by approvers'
-            },
-            {
-                header : approversCount,
-                meta : 'Number of Approvers',
-                description : 'Number of people who have already donated to this campaign'
-            },
-            {
-                header : web3.utils.fromWei(balance, 'ether'),
-                meta : 'Campaign Balance (ether)',
-                description : 'The balance is how much money this campaign has left to spend'
-            }
-        ];
+        this.setState({
+            manager: info['manager'],
+            title: info['title'],
+            description: info['description'],
+            videoFile: info['videoFile'] ,
+            videoUrl : `https://www.youtube.com/embed/${videoId}`,
+            minimumContribution: info['minimumContribution'],
+            goal: info['goal'],
+        })
 
-        return <Card.Group items={items}/>;
     }
 
-    render(){
+    backProject = () => {
+        console.log('address');
+    }
+
+    YouTubeGetID(url){
+        var ID = '';
+        url = url.replace(/(>|<)/gi,'').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
+        if(url[2] !== undefined) {
+          ID = url[2].split(/[^0-9a-z_\-]/i);
+          ID = ID[0];
+        }
+        else {
+          ID = url;
+        }
+          return ID;
+      }
+      
+    render() {
+        console.log('Manager : ', this.state.manager)
+        console.log('description : ', this.state.description)
+        console.log('title : ', this.state.title)
+        console.log('videoUrl : ', this.state.videoUrl)
+        console.log('minimumContribution : ', this.state.minimumContribution)
+        console.log('Goal : ', this.state.goal)
+
         return (
             <Layout>
-                <h3>CampaignShow</h3>
+                <h3>{this.state.title}</h3>
                 <Grid>
+                    <Grid.Row>
+                        <Grid.Column width={12}>
+                            <div className="video-detail col-md-8">
+                                <div className="embed-responsive embed-responsive-16by9">
+                                    <iframe width='800'
+                                        height='450'
+                                        src={this.state.videoUrl}></iframe>
+                                </div>
+
+                            </div>
+
+                        </Grid.Column>
+
+                        <Grid.Column width={4}>
+                            <Divider />
+                            <div className="details" style={{ marginTop: '40px' }}>
+                                <div style={{ color: 'green', 'font-size': '30px' }}>$44,753</div>
+                                <div style={{ marginTop: '10px' }}>pledged of $50,000 goal</div>
+                                <br />
+                                <div style={{ color: 'black', 'font-size': '30px' }}>507</div>
+                                <div style={{ marginTop: '10px' }}>backers</div>
+                                <br />
+                                <Button primary onClick={this.backProject}>Back this project</Button>
+
+                                <div style={{ marginTop: '30px' }}>
+                                    <Button circular color='facebook' icon='facebook' />
+                                    <Button circular color='twitter' icon='twitter' />
+                                    <Button circular color='linkedin' icon='linkedin' />
+                                    <Button circular color='google plus' icon='google plus' />
+                                </div>
+                            </div>
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
+
+                <br style={{ marginTop: '40px' }} />
+                <TabCampaign address = {this.props.url.query.address}/>
+
+                {/* <Grid>
                     <Grid.Row>
                         <Grid.Column width={10}>
                         {this.renderCard()}
@@ -89,10 +128,10 @@ class CampaignShow extends Component {
                         </Grid.Column>
                     </Grid.Row>
                  
-                </Grid>
+                </Grid> */}
 
             </Layout>
-        ); 
+        );
     }
 }
 

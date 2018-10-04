@@ -3,7 +3,7 @@ import { Card, Button, Segment, Grid, Image, Label, List, Divider } from 'semant
 import factory from '../ethereum/factory';
 import Layout from '../components/Layout';
 import { Link } from '../routes';
-import TabCampaign from '../components/TabCampaign';
+import TabCategory from '../components/Home/TabCategory';
 
 class CampaignIndex extends Component {
     // static async getInitialProps() {
@@ -81,7 +81,7 @@ class CampaignIndex extends Component {
 
                     <Divider/>
 
-                    <TabCampaign/>
+                    <TabCategory/>
                     {/* <h3>Open Campaigns</h3>
                     <Link route="/campaigns/new">
                         <a>
