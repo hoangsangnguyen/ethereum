@@ -4,8 +4,8 @@ import Campaign from '../../ethereum/campaign';
 import { Card, Grid, Button, Embed, Divider } from 'semantic-ui-react';
 import web3 from '../../ethereum/web3';
 import ContributeForm from '../../components/ContributeFrom';
-import { Link } from '../../routes';
 import TabCampaign from '../../components/Detail/TabCampaign';
+import {Link, Router } from '../../routes';
 
 
 class CampaignShow extends Component {
@@ -14,7 +14,7 @@ class CampaignShow extends Component {
         title: '',
         description: '',
         videoUrl: '',
-        videoUrl : '',
+        videoUrl: '',
         minimumContribution: '',
         goal: '',
         campaign: '',
@@ -31,31 +31,27 @@ class CampaignShow extends Component {
             manager: info['manager'],
             title: info['title'],
             description: info['description'],
-            videoFile: info['videoFile'] ,
-            videoUrl : `https://www.youtube.com/embed/${videoId}`,
+            videoFile: info['videoFile'],
+            videoUrl: `https://www.youtube.com/embed/${videoId}`,
             minimumContribution: info['minimumContribution'],
             goal: info['goal'],
         })
 
     }
 
-    backProject = () => {
-        console.log('address');
-    }
-
-    YouTubeGetID(url){
+    YouTubeGetID(url) {
         var ID = '';
-        url = url.replace(/(>|<)/gi,'').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
-        if(url[2] !== undefined) {
-          ID = url[2].split(/[^0-9a-z_\-]/i);
-          ID = ID[0];
+        url = url.replace(/(>|<)/gi, '').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
+        if (url[2] !== undefined) {
+            ID = url[2].split(/[^0-9a-z_\-]/i);
+            ID = ID[0];
         }
         else {
-          ID = url;
+            ID = url;
         }
-          return ID;
-      }
-      
+        return ID;
+    }
+
     render() {
         console.log('Manager : ', this.state.manager)
         console.log('description : ', this.state.description)
@@ -90,7 +86,11 @@ class CampaignShow extends Component {
                                 <div style={{ color: 'black', 'font-size': '30px' }}>507</div>
                                 <div style={{ marginTop: '10px' }}>backers</div>
                                 <br />
-                                <Button primary onClick={this.backProject}>Back this project</Button>
+                                <Link route={`/campaigns/${this.props.url.query.address}/back`}>
+                                    <a>
+                                        <Button primary>Back this project</Button>
+                                    </a>
+                                </Link>
 
                                 <div style={{ marginTop: '30px' }}>
                                     <Button circular color='facebook' icon='facebook' />
@@ -104,7 +104,7 @@ class CampaignShow extends Component {
                 </Grid>
 
                 <br style={{ marginTop: '40px' }} />
-                <TabCampaign address = {this.props.url.query.address}/>
+                <TabCampaign address={this.props.url.query.address} />
 
                 {/* <Grid>
                     <Grid.Row>

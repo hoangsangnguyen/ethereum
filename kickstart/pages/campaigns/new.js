@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Form, Input, Message, Checkbox, FormGroup, Dropdown, Container, Embed } from 'semantic-ui-react';
+import { Button, Form, Input, Message, Checkbox, FormGroup, Dropdown, Container, Embed, TextArea } from 'semantic-ui-react';
 import { Player } from 'video-react';
 import Layout from '../../components/Layout';
 import factory from '../../ethereum/factory';
@@ -77,12 +77,12 @@ class CampaignNew extends Component {
         event.preventDefault();
         this.setState({ loading: true, errorMessage: '' });
         console.log('name ' + this.state.name + ' \ncategory : ' + this.state.category
-        + '\nMinimum : ' + this.state.minimumContribution
-        + '\nDes : ' + this.state.description
-        + '\nGoal : ' + this.state.goal
-        + '\nInvestDes : ' + this.state.investmentDescription)
-        + '\nImageFile : ' + this.state.imagePreviewUrl
-        + '\nVideoFile : ' + this.state.videoPreviewUrl;
+            + '\nMinimum : ' + this.state.minimumContribution
+            + '\nDes : ' + this.state.description
+            + '\nGoal : ' + this.state.goal
+            + '\nInvestDes : ' + this.state.investmentDescription)
+            + '\nImageFile : ' + this.state.imagePreviewUrl
+            + '\nVideoFile : ' + this.state.videoPreviewUrl;
 
         try {
             const accounts = await web3.eth.getAccounts();
@@ -108,7 +108,7 @@ class CampaignNew extends Component {
         }
         this.setState({ loading: false });
 
-      
+
 
     };
 
@@ -233,7 +233,8 @@ class CampaignNew extends Component {
 
                     <Form.Field>
                         <label>Campaign Description</label>
-                        <Input
+                        <TextArea
+                            autoHeight
                             value={this.state.description}
                             onChange={event =>
                                 this.setState({ description: event.target.value })}
@@ -264,7 +265,8 @@ class CampaignNew extends Component {
 
                     <Form.Field>
                         <label>Investment Description</label>
-                        <Input
+                        <TextArea
+                            autoHeight
                             value={this.state.investmentDescription}
                             onChange={event =>
                                 this.setState({ investmentDescription: event.target.value })}
