@@ -1,5 +1,49 @@
 pragma solidity ^0.4.17;
 
+contract UserFactory {
+    
+    struct User{
+        string email;
+        string userName;
+        bytes32 password;
+        address walletAddress;
+    }
+    
+    User[] private users;
+    
+    function createUser(string email, string userName, string password, address walletAddress) public {
+        User memory newUser = User({
+            email : email,
+            userName : userName,
+            password :  keccak256(password),
+            walletAddress : walletAddress
+        });
+        
+        users.push(newUser);
+    }
+    
+    function login(string email, string password) constant returns(string userName, address walletAddress) {
+        for (uint i = 0; i < users.length; i++) {
+            User storage user = users[i];
+            if (compareStrings(user.email, email) && comparePassword(user.password, password)) {
+                return (user.userName, user.walletAddress);
+            }
+        }
+        
+        return ("", 0);
+    }
+    
+    function compareStrings (string a, string b)  private view returns (bool){
+       return keccak256(a) == keccak256(b);
+    }
+    
+    function comparePassword (bytes32 a, string b)  private view returns (bool){
+       return a == keccak256(b);
+    }
+  
+}
+
+
 contract CampaignFactory {
     mapping(string => address[]) deployedCampaigns;
     

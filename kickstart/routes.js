@@ -8,6 +8,10 @@ routes
     .add('/campaigns/:address/test', '/campaigns/test')   
     .add('/campaigns/:address/requests/new', '/campaigns/requests/new')
     .add('/fileupload/:filename', '/fileupload')
+    .add('/author/login', '/author/login')
+    .add('/author/signup', '/author/signup')
+    
+    
     ;
 
 module.exports = routes;
