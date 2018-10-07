@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
+import { Button, Form, Grid, Header, Image, Message, Segment, Container } from 'semantic-ui-react'
 import Layout from '../../components/Layout'
 import userFactory from '../../ethereum/user';
+import Head from 'next/head';
+import { Router } from '../../routes';
 
 class Login extends Component {
     state = {
@@ -20,7 +22,12 @@ class Login extends Component {
 
         try {
             let result = await userFactory.methods.login(this.state.email, this.state.password).call();
-            console.log('Login success ', result)
+            if (result["userName"].trim() == "") {
+                this.setState({errorMessage : "Username or password wrong"})
+            } else {
+                localStorage.setItem("user", JSON.stringify(result))
+                Router.pushRoute('/')
+            }
 
         } catch (err) {
             console.log('Error login', err.message)
@@ -32,20 +39,12 @@ class Login extends Component {
 
     render() {
         return (
-            <Layout>
-                <div>
-                    {/*
-                    Heads up! The styles below are necessary for the correct render of this example.
-                    You can do same with CSS, the main idea is that all the elements up to the `Grid`
-                    below must have a height of 100%.
-                    */}
-                    {/* <style>{`
-                    body > div,
-                    body > div > div,
-                    body > div > div > div.login-form {
-                        height: 100%;
-                    }
-                    `}</style> */}
+            <Container>
+                <Head>
+                    <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+                    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css"></link>
+                </Head>
+                <div className='login-form'>
                     <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
                         <Grid.Column style={{ maxWidth: 450 }}>
                             <Header as='h2' color='teal' textAlign='center'>
@@ -80,7 +79,7 @@ class Login extends Component {
                         </Grid.Column>
                     </Grid>
                 </div>
-            </Layout>
+            </Container>
         )
 
     }

@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-import { Button, Form, Grid, Header, Image, Message, Segment, Icon } from 'semantic-ui-react'
+import { Button, Form, Grid, Header, Image, Message, Segment, Icon, Container } from 'semantic-ui-react'
 import Layout from '../../components/Layout'
 import userFactory from '../../ethereum/user';
+import Head from 'next/head';
+import { Router } from '../../routes';
 
 class SignUp extends Component {
     state = {
@@ -17,7 +19,6 @@ class SignUp extends Component {
     onSubmit = async (event) => {
         event.preventDefault();
         this.setState({ loading: true, errorMessage: '' })
-
         if (this.state.password != this.state.confirmPassword) {
             console.log('Password confirm wrong')
             return
@@ -31,14 +32,16 @@ class SignUp extends Component {
 
         try {
 
-            await userFactory.methods.createUser(this.state.email, this.state.userName, this.state.password, this.state.walletAddress)
-                    .send({
-                        from : this.state.walletAddress
-                    });
+            let result = await userFactory.methods.createUser(this.state.email, this.state.userName, this.state.password, this.state.walletAddress)
+                .send({
+                    from: this.state.walletAddress
+                });
+
+            Router.pushRoute('/author/login')
             console.log('Sign up success')
 
         } catch (err) {
-            console.log('Error sign up ' , err.message)
+            console.log('Error sign up ', err.message)
             this.setState({ errorMessage: err.message });
         }
 
@@ -47,7 +50,11 @@ class SignUp extends Component {
 
     render() {
         return (
-            <Layout>
+            <Container>
+                <Head>
+                    <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+                    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css"></link>
+                </Head>
                 <div >
                     {/*
                     Heads up! The styles below are necessary for the correct render of this example.
@@ -110,7 +117,7 @@ class SignUp extends Component {
                         </Grid.Column>
                     </Grid>
                 </div>
-            </Layout>
+            </Container>
         )
     }
 }
