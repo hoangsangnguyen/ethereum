@@ -50,17 +50,21 @@ contract UserFactory {
 
 contract CampaignFactory {
     mapping(string => address[]) deployedCampaigns;
-    
+    uint public campaignsCount;
+    address[] public campaignsAddress;
+
     function createCampaign(string title, string category, uint minimum, string description, string imageFile, string videoFile,
         uint goal, string investmentDescription) public {
         address newCampaign = new Campaign(msg.sender, title, category, minimum, description, imageFile, videoFile, goal, investmentDescription);
         deployedCampaigns[category].push(newCampaign);
+        campaignsAddress.push(newCampaign);
+        campaignsCount++;
     }
-    
     
     function getDeployedCampaign(string category) public view returns (address[]) {
         return deployedCampaigns[category];
     }
+
 }
 
 contract Campaign {
@@ -189,6 +193,10 @@ contract Campaign {
     
     function getRequestsCount() constant public isContributor returns(uint requestCount) {
         return mRequests.length;
+    }
+
+    function isFunded() constant public returns(bool) {
+        return mBacked >= mGoal;
     }
   
 }

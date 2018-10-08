@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Card, Button, Segment, Grid, Image, Label, List, Divider } from 'semantic-ui-react';
 import factory from '../ethereum/factory';
+import Campaign from '../ethereum/campaign';
 import Layout from '../components/Layout';
 import { Link } from '../routes';
 import TabCategory from '../components/Home/TabCategory';
@@ -29,12 +30,31 @@ class CampaignIndex extends Component {
     // }
 
     state = {
-        totalBackers : '' 
+        totalBackers : '',
+        totalCampaigns : '',
+        funded : '',
+        lived : ''
     }
 
     async componentDidMount() {
-        let totalBackers = await userFactory.methods.getTotalBackers().call();
-        this.setState({totalBackers})
+        let totalBackers = await userFactory.methods.getTotalBackers().call()
+        let totalCampaigns = await factory.methods.campaignsCount().call()
+        
+        let funded = 0
+
+        await Promise.all(
+            Array(parseInt(totalCampaigns)).fill().map( async(element, index) => {
+                let address = await factory.methods.campaignsAddress(index).call()
+                let campaign = Campaign(address)
+                let isFunded = await campaign.methods.isFunded().call()
+                if (isFunded == true) {
+                    funded++
+                } 
+            })
+        );
+
+        let lived = totalCampaigns - funded
+        this.setState({totalBackers, totalCampaigns, funded, lived})
     }
 
     render() {
@@ -70,7 +90,7 @@ class CampaignIndex extends Component {
                                         FUNDED PROJECTS
                                     </List.Item>
                                     <List.Item>
-                                        150.551
+                                        {this.state.funded}
                                     </List.Item>
                                 </List>
                             </Grid.Column>
@@ -81,7 +101,7 @@ class CampaignIndex extends Component {
                                         LIVE PROJECTS
                                     </List.Item>
                                     <List.Item>
-                                        3.622
+                                        {this.state.lived}
                                     </List.Item>
                                 </List>
                             </Grid.Column>
