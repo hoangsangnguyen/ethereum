@@ -5,6 +5,7 @@ import factory from '../../ethereum/factory';
 import web3 from '../../ethereum/web3';
 import { Link } from '../../routes';
 import Campaign from '../../ethereum/campaign';
+import { Router } from '../../routes';
 
 class BackCampaign extends Component {
     state = {
@@ -29,18 +30,25 @@ class BackCampaign extends Component {
         this.setState({ loading: true, errorMessage: '' });
 
         try {
-            const accounts = await web3.eth.getAccounts();
-            console.log('Account : ', accounts)
+            const user = JSON.parse(localStorage.getItem("user"))
+            if (user == null) {
+                Router.pushRoute("/author/login")
+                return
+            }
+            
+            const userWalletAddress = user.walletAddress
+            console.log("User walletAdress : ", userWalletAddress)
 
             const campaign = Campaign(this.props.url.query.address)
 
             console.log('campaign : ' + campaign);
+            console.log('Amount back : ', this.state.amount)
 
             await campaign.methods
                 .contribute()
                 .send({
-                    value: '200',
-                    from: accounts[0]
+                    value: web3.utils.toWei(this.state.amount, 'ether'),
+                    from: userWalletAddress
                 });
 
             Router.pushRoute(`/campaigns/${this.props.url.query.address}`);
@@ -53,12 +61,6 @@ class BackCampaign extends Component {
 
     };
 
-    async createAccount(){
-        console.log('Before create account')
-        const account = await web3.eth.accounts.create()
-        console.log('ACCOUNT ', account)
-    }
-
     render() {
         console.log('Address ', this.props.url.query.address)
 
@@ -69,7 +71,7 @@ class BackCampaign extends Component {
                         <GridColumn width={5}>
                             <Link route={`/campaigns/${this.props.url.query.address}`}>
                                 <a>
-                                    <Button content='Back' icon='left arrow' labelPosition='left' />
+                                    <Button content='Return' icon='left arrow' labelPosition='left' />
                                 </a>
                             </Link>
                         </GridColumn>
@@ -98,8 +100,6 @@ class BackCampaign extends Component {
 
                     <Button primary loading={this.state.loading}>Back to this campaign</Button>
                 </Form>
-
-                <Button onClick={this.createAccount}>Create Account</Button>
             </Layout>
         );
     }

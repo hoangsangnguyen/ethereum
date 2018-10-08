@@ -18,7 +18,8 @@ class CampaignShow extends Component {
         minimumContribution: '',
         goal: '',
         campaign: '',
-        address: ''
+        address: '',
+        backed : ''
     }
 
     async componentDidMount() {
@@ -34,7 +35,8 @@ class CampaignShow extends Component {
             videoFile: info['videoFile'],
             videoUrl: `https://www.youtube.com/embed/${videoId}`,
             minimumContribution: info['minimumContribution'],
-            goal: info['goal'],
+            goal: web3.utils.fromWei(info['goal'], 'ether'),
+            backed : web3.utils.fromWei(info['backed'], 'ether'),
         })
 
     }
@@ -59,6 +61,8 @@ class CampaignShow extends Component {
         console.log('videoUrl : ', this.state.videoUrl)
         console.log('minimumContribution : ', this.state.minimumContribution)
         console.log('Goal : ', this.state.goal)
+        console.log('Backed : ', this.state.backed)
+        
 
         return (
             <Layout>
@@ -80,8 +84,8 @@ class CampaignShow extends Component {
                         <Grid.Column width={4}>
                             <Divider />
                             <div className="details" style={{ marginTop: '40px' }}>
-                                <div style={{ color: 'green', 'font-size': '30px' }}>$44,753</div>
-                                <div style={{ marginTop: '10px' }}>pledged of $50,000 goal</div>
+                                <div style={{ color: 'green', 'font-size': '30px' }}>{this.state.backed} Eth</div>
+                                <div style={{ marginTop: '10px' }}>pledged of {this.state.goal} Eth goal</div>
                                 <br />
                                 <div style={{ color: 'black', 'font-size': '30px' }}>507</div>
                                 <div style={{ marginTop: '10px' }}>backers</div>

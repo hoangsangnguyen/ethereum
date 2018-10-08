@@ -84,8 +84,10 @@ contract Campaign {
     string public mCategory;
     uint public mMinimumContribution;
     uint public mGoal;
+    uint public mBacked;
     string public mInvestmentDescription;
     
+
     Request[] public mRequests;
     
     mapping(address => User) public mInvestors;
@@ -128,6 +130,8 @@ contract Campaign {
             mInvestors[msg.sender] = newInvestor;
             mInvestorsCount++;
         }
+
+        mBacked += msg.value;
         
     }
     
@@ -171,10 +175,10 @@ contract Campaign {
         
     }
 
-    function getCampaignInfo() public returns (address manager,
+    function getCampaignInfo() constant public returns (address manager,
                                 string title, string description,
                                 string videoFile, uint minimumContribution,
-                                uint goal, string investmentDescription){
+                                uint goal, string investmentDescription, uint backed){
         return (
             mManager,
             mTitle, 
@@ -182,7 +186,8 @@ contract Campaign {
             mVideoFile,
             mMinimumContribution,
             mGoal,
-            mInvestmentDescription
+            mInvestmentDescription,
+            mBacked
         );
     }
 

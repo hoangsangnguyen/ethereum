@@ -81,24 +81,35 @@ class CampaignNew extends Component {
             + '\nDes : ' + this.state.description
             + '\nGoal : ' + this.state.goal
             + '\nInvestDes : ' + this.state.investmentDescription)
-            + '\nImageFile : ' + this.state.imagePreviewUrl
-            + '\nVideoFile : ' + this.state.videoPreviewUrl;
+            + '\nImageFile : ' + this.state.imageFile
+            + '\nVideoFile : ' + this.state.videoFile;
 
         try {
-            const accounts = await web3.eth.getAccounts();
-            console.log('account : ' + accounts);
+            const user = JSON.parse(localStorage.getItem("user"))
+            if (user == null) {
+                Router.pushRoute("/author/login")
+                return
+            }
+            
+            const userWalletAddress = user.walletAddress
+            console.log("User walletAdress : ", userWalletAddress)
+
+            // const accounts = await web3.eth.getAccounts();
+            // console.log('account : ' + accounts);
             await factory.methods
                 .createCampaign(
                     this.state.name,
                     this.state.category,
                     web3.utils.toWei(this.state.minimumContribution, 'ether'),
                     this.state.description,
-                    'https://pbs.twimg.com/profile_images/626149701189042177/LWpxKEv3_400x400.png',
-                    'https://www.youtube.com/watch?v=1njYc9ZO6WQ',
+                    this.state.imageFile,
+                    this.state.videoFile,
+                    // 'https://pbs.twimg.com/profile_images/626149701189042177/LWpxKEv3_400x400.png',
+                    // 'https://www.youtube.com/watch?v=1njYc9ZO6WQ',
                     web3.utils.toWei(this.state.goal, 'ether'),
                     this.state.investmentDescription)
                 .send({
-                    from: accounts[0]
+                    from: userWalletAddress
                 });
 
             Router.pushRoute('/');
@@ -275,24 +286,38 @@ class CampaignNew extends Component {
 
                     <Form.Field>
                         <label>Image</label>
-                        <input className="fileInput"
+                        <Input
+                            label="wei"
+                            labelPosition="right"
+                            value={this.state.imageFile}
+                            onChange={event =>
+                                this.setState({ imageFile: event.target.value })}
+                        />
+                        {/* <input className="fileInput"
                             type="file"
-                            onChange={(e) => this._handleImageChange(e)} />
+                            onChange={(e) => this._handleImageChange(e)} /> */}
 
-                        <div className="imgPreview">
+                        {/* <div className="imgPreview">
                             {$imagePreview}
-                        </div>
+                        </div> */}
                     </Form.Field>
 
                     <Form.Field>
                         <label>Video</label>
-                        <input className="fileInput"
+                        <Input
+                            label="wei"
+                            labelPosition="right"
+                            value={this.state.videoFile}
+                            onChange={event =>
+                                this.setState({ videoFile: event.target.value })}
+                        />
+                        {/* <input className="fileInput"
                             type="file"
                             onChange={(e) => this._handleVideoChange(e)} />
 
                         <div className="videoPreview">
                             {$videoPreview}
-                        </div>
+                        </div> */}
                     </Form.Field>
 
                     <Form.Field>

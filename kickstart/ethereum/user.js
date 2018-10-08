@@ -3,7 +3,7 @@ import UserFactory from './build/UserFactory.json';
 
 const instance = new web3.eth.Contract(
     JSON.parse(UserFactory.interface),
-    '0x90c398e8F0b02d4cAD33fee7d72E9e8F45Ae638F'
+    '0x7B07E41FF4Ca852d801577daa2C0680ab45535F6'
 );
 
 export default instance;
