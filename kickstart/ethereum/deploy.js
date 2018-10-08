@@ -23,17 +23,17 @@ const deploy = async () => {
 
 };
 
-// const deployUsers = async () => {
-//     const accounts = await web3.eth.getAccounts();
-//     console.log('Attempting to deploy userFactory from account', accounts[0]);
+const deployUsers = async () => {
+    const accounts = await web3.eth.getAccounts();
+    console.log('Attempting to deploy userFactory from account', accounts[0]);
 
-//     const result = await new web3.eth.Contract(JSON.parse(compiledUserFactory.interface))
-//         .deploy({data : compiledUserFactory.bytecode})
-//         .send ({from : accounts[0], gas : '3000000'});
+    const result = await new web3.eth.Contract(JSON.parse(compiledUserFactory.interface))
+        .deploy({data : compiledUserFactory.bytecode})
+        .send ({from : accounts[0], gas : '3000000'});
     
-//     console.log('Contract to deploy users to ', result.options.address);
+    console.log('Contract to deploy users to ', result.options.address);
 
-// };
+};
 
-deploy();
-// deployUsers();
+// deploy();
+deployUsers();

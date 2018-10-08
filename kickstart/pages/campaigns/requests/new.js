@@ -14,28 +14,33 @@ class RequestNew extends Component {
         errorMessage : ''
     };
 
-    static async getInitialProps(props) {
-        const {address} = props.query;
-        return {address};
-    }
+    // static async getInitialProps(props) {
+    //     const {address} = props.query;
+    //     return {address};
+    // }
 
     onSubmit = async event => {
         event.preventDefault();
 
+        const user = JSON.parse(localStorage.getItem("user"))
+        if (user == null) {
+            Router.pushRoute('/author/login')
+            return
+        }
+
         this.setState({loading : true, errorMessage : ''});
 
-        const campaign = Campaign(this.props.address);
+        const campaign = Campaign(this.props.url.query.address);
         const {description, value, recipient} = this.state;
 
         try {
-            const accounts = await web3.eth.getAccounts();
             await campaign.methods.createRequest(
                 description,
                 web3.utils.toWei(value, 'ether'),
                 recipient   
-            ).send({from : accounts[0]});
+            ).send({from : user.walletAddress});
             
-            Router.pushRoute(`/campaigns/${this.props.address}/requests`);
+            Router.pushRoute(`/campaigns/${this.props.url.query.address}/requests`);
 
         } catch (err) {
             this.setState({errorMessage : err.message});
@@ -48,7 +53,7 @@ class RequestNew extends Component {
     render() {
         return (
             <Layout>
-                <Link route={`/campaigns/${this.props.address}/requests`}>
+                <Link route={`/campaigns/${this.props.url.query.address}/requests`}>
                     <a>
                         Back
                     </a>

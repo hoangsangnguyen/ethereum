@@ -33,6 +33,10 @@ contract UserFactory {
         return ("", 0);
     }
     
+    function getTotalBackers() constant returns(uint totalBackers) {
+        return users.length;    
+    }
+
     function compareStrings (string a, string b)  private view returns (bool){
        return keccak256(a) == keccak256(b);
     }
@@ -70,12 +74,7 @@ contract Campaign {
         mapping(address => bool) approvals;
     }
     
-    struct User {
-       // string name;
-        address userAddress;
-        uint amount;
-    }
-    
+  
     address public mManager;
     string public mTitle;
     string public mDescription;
@@ -90,7 +89,7 @@ contract Campaign {
 
     Request[] public mRequests;
     
-    mapping(address => User) public mInvestors;
+    mapping(address => uint) public mInvestors;
     uint public mInvestorsCount;
     
     modifier restricted(){
@@ -99,7 +98,7 @@ contract Campaign {
     }
     
     modifier isContributor(){
-        require(mInvestors[msg.sender].amount != 0);
+        require(mInvestors[msg.sender] != 0);
         _;
     }
     
@@ -119,15 +118,10 @@ contract Campaign {
     function contribute() public payable {
         require(msg.value > mMinimumContribution);
         
-        if(mInvestors[msg.sender].amount != 0) {
-            mInvestors[msg.sender].amount += msg.value;
+        if(mInvestors[msg.sender] != 0) {
+            mInvestors[msg.sender] += msg.value;
         } else {
-            User memory newInvestor = User({
-                userAddress : msg.sender,
-                amount : msg.value
-            });
-        
-            mInvestors[msg.sender] = newInvestor;
+            mInvestors[msg.sender] = msg.value;
             mInvestorsCount++;
         }
 
@@ -155,7 +149,7 @@ contract Campaign {
     function approveRequest(uint index) public isContributor{
         Request storage request = mRequests[index];
         
-        require(mInvestors[msg.sender].amount != 0);
+        require(mInvestors[msg.sender] != 0);
         require(!request.approvals[msg.sender]);
         
         request.approvals[msg.sender] = true;
@@ -178,7 +172,8 @@ contract Campaign {
     function getCampaignInfo() constant public returns (address manager,
                                 string title, string description,
                                 string videoFile, uint minimumContribution,
-                                uint goal, string investmentDescription, uint backed){
+                                uint goal, string investmentDescription, uint backed,
+                                uint investorCount){
         return (
             mManager,
             mTitle, 
@@ -187,9 +182,14 @@ contract Campaign {
             mMinimumContribution,
             mGoal,
             mInvestmentDescription,
-            mBacked
+            mBacked,
+            mInvestorsCount
         );
     }
-
+    
+    function getRequestsCount() constant public isContributor returns(uint requestCount) {
+        return mRequests.length;
+    }
+  
 }
 

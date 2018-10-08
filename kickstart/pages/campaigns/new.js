@@ -90,7 +90,7 @@ class CampaignNew extends Component {
                 Router.pushRoute("/author/login")
                 return
             }
-            
+
             const userWalletAddress = user.walletAddress
             console.log("User walletAdress : ", userWalletAddress)
 
@@ -167,6 +167,7 @@ class CampaignNew extends Component {
     }
 
     render() {
+       
         console.log('image file : ', this.state.imagePreviewUrl);
         console.log('video file : ', this.state.videoPreviewUrl);
 

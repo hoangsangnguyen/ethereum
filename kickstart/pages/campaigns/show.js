@@ -5,7 +5,7 @@ import { Card, Grid, Button, Embed, Divider } from 'semantic-ui-react';
 import web3 from '../../ethereum/web3';
 import ContributeForm from '../../components/ContributeFrom';
 import TabCampaign from '../../components/Detail/TabCampaign';
-import {Link, Router } from '../../routes';
+import { Link, Router } from '../../routes';
 
 
 class CampaignShow extends Component {
@@ -19,15 +19,25 @@ class CampaignShow extends Component {
         goal: '',
         campaign: '',
         address: '',
-        backed : ''
+        backed: '',
+        investorCount: '',
+        userWalletAddress: '',
+        isBacker : false
     }
 
     async componentDidMount() {
         const campaign = Campaign(this.props.url.query.address)
         const info = await campaign.methods.getCampaignInfo().call();
 
-        const videoId = this.YouTubeGetID(info['videoFile']);
+        const user = JSON.parse(localStorage.getItem("user"))
+        if (user != null) {
+            let isBacker = await campaign.methods.mInvestors(user.walletAddress).call();
+            this.setState({userWalletAddress : user.walletAddress, isBacker : isBacker != 0})
+            
+        }
 
+        const videoId = this.YouTubeGetID(info['videoFile']);
+        
         this.setState({
             manager: info['manager'],
             title: info['title'],
@@ -36,7 +46,8 @@ class CampaignShow extends Component {
             videoUrl: `https://www.youtube.com/embed/${videoId}`,
             minimumContribution: info['minimumContribution'],
             goal: web3.utils.fromWei(info['goal'], 'ether'),
-            backed : web3.utils.fromWei(info['backed'], 'ether'),
+            backed: web3.utils.fromWei(info['backed'], 'ether'),
+            investorCount: info['investorCount']
         })
 
     }
@@ -62,7 +73,7 @@ class CampaignShow extends Component {
         console.log('minimumContribution : ', this.state.minimumContribution)
         console.log('Goal : ', this.state.goal)
         console.log('Backed : ', this.state.backed)
-        
+        console.log('Investor Count : ', this.state.investorCount)
 
         return (
             <Layout>
@@ -87,7 +98,7 @@ class CampaignShow extends Component {
                                 <div style={{ color: 'green', 'font-size': '30px' }}>{this.state.backed} Eth</div>
                                 <div style={{ marginTop: '10px' }}>pledged of {this.state.goal} Eth goal</div>
                                 <br />
-                                <div style={{ color: 'black', 'font-size': '30px' }}>507</div>
+                                <div style={{ color: 'black', 'font-size': '30px' }}>{this.state.investorCount}</div>
                                 <div style={{ marginTop: '10px' }}>backers</div>
                                 <br />
                                 <Link route={`/campaigns/${this.props.url.query.address}/back`}>
@@ -102,6 +113,15 @@ class CampaignShow extends Component {
                                     <Button circular color='linkedin' icon='linkedin' />
                                     <Button circular color='google plus' icon='google plus' />
                                 </div>
+                                <br />
+
+                                {this.state.isBacker ? <Link route={`/campaigns/${this.props.url.query.address}/requests`}>
+                                    <a>
+                                        <Button secondary>Request</Button>
+                                    </a>
+                                </Link> : null}
+                                
+
                             </div>
                         </Grid.Column>
                     </Grid.Row>

@@ -47,9 +47,12 @@ class HeaderComponent extends Component {
             <Container>
                 <Grid relaxed style={{ marginTop: '10px' }}>
                     <Grid.Column width={3}>
-                        <Link route="/campaigns/new">
+                        {isLogin ? <Link route="/campaigns/new">
                             <a className="item" style={{ marginLeft: '20px' }} >Start a project</a>
-                        </Link>
+                        </Link> : <Link route="/author/login">
+                            <a className="item" style={{ marginLeft: '20px' }} >Start a project</a>
+                        </Link>}
+                        
 
                     </Grid.Column>
 

@@ -6,33 +6,41 @@ import Campaign from '../ethereum/campaign';
 
 class RequestRow extends Component {
     onApprove = async () => {
-        const campaign = Campaign(this.props.address);
-        const accounts = await web3.eth.getAccounts();
+        const user = JSON.parse(localStorage.getItem("user"))
+        if (user == null) {
+            Router.pushRoute('/author/login')
+            return
+        }
 
+        const campaign = Campaign(this.props.address);
         await campaign.methods.approveRequest(this.props.id).send({
-            from : accounts[0]
+            from : user.walletAddress
         });
 
     };
 
     onFinalize = async () => {
-        const campaign = Campaign(this.props.address);
-        const accounts = await web3.eth.getAccounts();
+        const user = JSON.parse(localStorage.getItem("user"))
+        if (user == null) {
+            Router.pushRoute('/author/login')
+            return
+        }
 
+        const campaign = Campaign(this.props.address);
         await campaign.methods.finalizeRequest(this.props.id).send({
-            from : accounts[0]
+            from : user.walletAddress
         });
     };
 
     render(){
         const {Row, Cell} = Table
-        const {id, request, approversCount} = this.props;
-        const readyToFinalize = request.approvalCount > approversCount / 2;
+        const {id, request, approversCount} = this.props
+        const readyToFinalize = request.approvalCount > approversCount / 2
 
         return (
             <Row disabled={request.complete} positive={readyToFinalize && !request.complete}>
                 <Cell>{id}</Cell>
-                <Cell>{request.description}</Cell>
+                <Cell>{request.requestDescription}</Cell>
                 <Cell>{web3.utils.fromWei(request.value, 'ether')}</Cell>
                 <Cell>{request.recipient}</Cell>
                 <Cell>{request.approvalCount} / {approversCount}</Cell>

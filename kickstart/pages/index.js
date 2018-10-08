@@ -4,6 +4,7 @@ import factory from '../ethereum/factory';
 import Layout from '../components/Layout';
 import { Link } from '../routes';
 import TabCategory from '../components/Home/TabCategory';
+import userFactory from '../ethereum/user';
 
 class CampaignIndex extends Component {
     // static async getInitialProps() {
@@ -27,6 +28,15 @@ class CampaignIndex extends Component {
     //     return <Card.Group items={items} />;
     // }
 
+    state = {
+        totalBackers : '' 
+    }
+
+    async componentDidMount() {
+        let totalBackers = await userFactory.methods.getTotalBackers().call();
+        this.setState({totalBackers})
+    }
+
     render() {
         return (
             <div>
@@ -36,7 +46,6 @@ class CampaignIndex extends Component {
                             <Grid.Column width={4}>
                                 <List>
                                     <List.Item>
-                                        September 19, 2018
                                     </List.Item>
                                     <List.Item>
                                         Bringing creative projects to life.
@@ -50,7 +59,7 @@ class CampaignIndex extends Component {
                                         TOTAL BACKERS
                                     </List.Item>
                                     <List.Item>
-                                        15.199.786
+                                        {this.state.totalBackers}
                                     </List.Item>
                                 </List>
                             </Grid.Column>
@@ -79,9 +88,9 @@ class CampaignIndex extends Component {
                         </Grid.Row>
                     </Grid>
 
-                    <Divider/>
+                    <Divider />
 
-                    <TabCategory/>
+                    <TabCategory />
                     {/* <h3>Open Campaigns</h3>
                     <Link route="/campaigns/new">
                         <a>
