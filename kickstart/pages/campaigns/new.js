@@ -117,6 +117,8 @@ class CampaignNew extends Component {
             console.log(err.message);
             this.setState({ errorMessage: err.message });
         }
+
+        console.log('Out')
         this.setState({ loading: false });
 
 
@@ -168,45 +170,45 @@ class CampaignNew extends Component {
 
     render() {
        
-        console.log('image file : ', this.state.imagePreviewUrl);
-        console.log('video file : ', this.state.videoPreviewUrl);
+        // console.log('image file : ', this.state.imagePreviewUrl);
+        // console.log('video file : ', this.state.videoPreviewUrl);
 
-        let { imagePreviewUrl } = this.state;
-        let $imagePreview = null;
-        if (imagePreviewUrl) {
-            $imagePreview = (
-                <Container>
-                    <img
-                        src={imagePreviewUrl}
-                        height='300px'
-                        width='300px' />
-                    <br />
-                    <Button
-                        basic color='red'
-                        onClick={(e) => this._handleDeleteImage(e)}>Delete Image</Button>
+        // let { imagePreviewUrl } = this.state;
+        // let $imagePreview = null;
+        // if (imagePreviewUrl) {
+        //     $imagePreview = (
+        //         <Container>
+        //             <img
+        //                 src={imagePreviewUrl}
+        //                 height='300px'
+        //                 width='300px' />
+        //             <br />
+        //             <Button
+        //                 basic color='red'
+        //                 onClick={(e) => this._handleDeleteImage(e)}>Delete Image</Button>
 
-                </Container>
-            );
-        } else {
-            //$imagePreview = (<div className="previewText">Please select an Image for Preview</div>);
-        }
+        //         </Container>
+        //     );
+        // } else {
+        //     //$imagePreview = (<div className="previewText">Please select an Image for Preview</div>);
+        // }
 
-        let { videoPreviewUrl } = this.state;
-        let $videoPreview = null;
-        if (videoPreviewUrl) {
-            $videoPreview = (
-                <Container>
-                    <ReactPlayer url={videoPreviewUrl} controls />
-                    <br />
-                    <Button
-                        basic color='red'
-                        onClick={(e) => this._handleDeleteVideo(e)}>Delete Video</Button>
+        // let { videoPreviewUrl } = this.state;
+        // let $videoPreview = null;
+        // if (videoPreviewUrl) {
+        //     $videoPreview = (
+        //         <Container>
+        //             <ReactPlayer url={videoPreviewUrl} controls />
+        //             <br />
+        //             <Button
+        //                 basic color='red'
+        //                 onClick={(e) => this._handleDeleteVideo(e)}>Delete Video</Button>
 
-                </Container>
-            );
-        } else {
-            //$imagePreview = (<div className="previewText">Please select an Image for Preview</div>);
-        }
+        //         </Container>
+        //     );
+        // } else {
+        //     //$imagePreview = (<div className="previewText">Please select an Image for Preview</div>);
+        // }
 
         return (
             <Layout>
@@ -214,28 +216,30 @@ class CampaignNew extends Component {
 
                 <Form className="segment" onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
 
-                    <Form.Field>
+                    <Form.Field required>
                         <label>Category</label>
-                        <Dropdown placeholder='Select Friend'
+                        <Dropdown placeholder='Select category..'
                             fluid selection
                             options={this.categories}
                             onChange={(event, { value }) =>
-                                this.setState({ category: value })} />
+                                this.setState({ category: value })}
+                            />
                     </Form.Field>
 
-                    <Form.Field>
+                    <Form.Field required>
                         <label>Campaign name</label>
                         <Input
+                            required
                             value={this.state.name}
                             onChange={event =>
                                 this.setState({ name: event.target.value })}
                         />
                     </Form.Field>
 
-                    <Form.Field>
+                    <Form.Field required>
                         <label>Minimum Contribution</label>
                         <Input
-                            label="wei"
+                            label="eth"
                             labelPosition="right"
                             value={this.state.minimumContribution}
                             onChange={event =>
@@ -253,7 +257,7 @@ class CampaignNew extends Component {
                         />
                     </Form.Field>
 
-                    <Form.Field>
+                    <Form.Field required>
                         <label>Goal</label>
                         <Input
                             label="wei"
@@ -285,11 +289,9 @@ class CampaignNew extends Component {
                         />
                     </Form.Field>
 
-                    <Form.Field>
+                    <Form.Field required>
                         <label>Image</label>
                         <Input
-                            label="wei"
-                            labelPosition="right"
                             value={this.state.imageFile}
                             onChange={event =>
                                 this.setState({ imageFile: event.target.value })}
@@ -303,11 +305,9 @@ class CampaignNew extends Component {
                         </div> */}
                     </Form.Field>
 
-                    <Form.Field>
+                    <Form.Field required>
                         <label>Video</label>
                         <Input
-                            label="wei"
-                            labelPosition="right"
                             value={this.state.videoFile}
                             onChange={event =>
                                 this.setState({ videoFile: event.target.value })}
@@ -321,14 +321,14 @@ class CampaignNew extends Component {
                         </div> */}
                     </Form.Field>
 
-                    <Form.Field>
+                    {/* <Form.Field>
                         <Checkbox label='I agree to the Terms and Conditions' />
-                    </Form.Field>
+                    </Form.Field> */}
 
                     <Message error header="Oops!" content={this.state.errorMessage} />
 
 
-                    <Button primary>Create</Button>
+                    <Button primary loading={this.state.loading}>Create</Button>
                 </Form>
             </Layout>
         );

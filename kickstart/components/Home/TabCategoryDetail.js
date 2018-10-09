@@ -3,6 +3,7 @@ import { Container, Image, Grid, Card, Icon } from 'semantic-ui-react';
 import { Link } from '../../routes';
 import factory from '../../ethereum/factory';
 import Campaign from '../../ethereum/campaign';
+import web3 from '../../ethereum/web3';
 
 class TabCategoryDetail extends Component {
     state = {
@@ -17,10 +18,14 @@ class TabCategoryDetail extends Component {
                 const campaign = Campaign(address);
                 let title = await campaign.methods.mTitle().call();
                 let imageUrl = await campaign.methods.mImageFile().call();
+                let backed = await campaign.methods.mBacked().call();
+                let goal = await campaign.methods.mGoal().call();
                 return {
                     title: title,
                     imageUrl: imageUrl,
-                    address: address
+                    address: address,
+                    backed : web3.utils.fromWei(backed, 'ether'),
+                    goal : web3.utils.fromWei(goal, 'ether'),
                 }
             });
 
@@ -41,9 +46,7 @@ class TabCategoryDetail extends Component {
             items.push({
                 image: { src: campaign.imageUrl, width: '100%', height: '200px' },
                 header: campaign.title,
-                description: (
-                    campaign.address
-                ),
+                extra : `Backed:  ${campaign.backed} / ${campaign.goal}`,
                 href : `/campaigns/${campaign.address}`
             })
         });

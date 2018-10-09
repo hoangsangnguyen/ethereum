@@ -27,15 +27,14 @@ class BackCampaign extends Component {
 
     onSubmit = async (event) => {
         event.preventDefault();
+        const user = JSON.parse(localStorage.getItem("user"))
+        if (user == null) {
+            Router.pushRoute("/author/login")
+            return
+        }
         this.setState({ loading: true, errorMessage: '' });
 
         try {
-            const user = JSON.parse(localStorage.getItem("user"))
-            if (user == null) {
-                Router.pushRoute("/author/login")
-                return
-            }
-            
             const userWalletAddress = user.walletAddress
             console.log("User walletAdress : ", userWalletAddress)
 
@@ -71,7 +70,7 @@ class BackCampaign extends Component {
                         <GridColumn width={5}>
                             <Link route={`/campaigns/${this.props.url.query.address}`}>
                                 <a>
-                                    <Button content='Return' icon='left arrow' labelPosition='left' />
+                                    <Button basic content='Return' icon='left arrow' labelPosition='left' />
                                 </a>
                             </Link>
                         </GridColumn>

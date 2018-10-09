@@ -61,7 +61,7 @@ class SignUp extends Component {
                     You can do same with CSS, the main idea is that all the elements up to the `Grid`
                     below must have a height of 100%.
                     */}
-                    <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
+                    <Grid textAlign='center' style={{ height: '100%',  marginTop : '20px'  }} verticalAlign='middle'>
                         <Grid.Column style={{ maxWidth: 450 }}>
                             <Header as='h2' color='teal' textAlign='center'>
                                 SignUp your account

@@ -117,7 +117,7 @@ class CampaignShow extends Component {
 
                                 {this.state.isBacker ? <Link route={`/campaigns/${this.props.url.query.address}/requests`}>
                                     <a>
-                                        <Button secondary>Request</Button>
+                                        <Button color='yellow'>Request</Button>
                                     </a>
                                 </Link> : null}
                                 

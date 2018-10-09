@@ -45,7 +45,7 @@ class Login extends Component {
                     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css"></link>
                 </Head>
                 <div className='login-form'>
-                    <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
+                    <Grid textAlign='center' style={{ height: '100%', marginTop : '20px' }} verticalAlign='middle'>
                         <Grid.Column style={{ maxWidth: 450 }}>
                             <Header as='h2' color='teal' textAlign='center'>
                                 Log-in to your account
