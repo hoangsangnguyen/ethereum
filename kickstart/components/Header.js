@@ -59,7 +59,7 @@ class HeaderComponent extends Component {
                     <Grid.Column width={10} style={{ textAlign: 'center' }}>
                         <Link route="/">
                             <Header as='h2' color='teal' textAlign='center'>
-                                KICKSTARER
+                                KICKSTARTER
                             </Header>
                         </Link>
                     </Grid.Column>

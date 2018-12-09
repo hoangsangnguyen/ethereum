@@ -9,8 +9,14 @@ contract UserFactory {
         address walletAddress;
     }
     
+    struct UserInfo{
+        string email;
+        string userName;
+    }
+
     User[] private users;
-    
+    UserInfo[] public usersInfo;
+
     function createUser(string email, string userName, string password, address walletAddress) public {
         User memory newUser = User({
             email : email,
@@ -18,8 +24,14 @@ contract UserFactory {
             password :  keccak256(password),
             walletAddress : walletAddress
         });
+
+        UserInfo memory newUserInfo = UserInfo({
+            email : email,
+            userName : userName
+        });
         
         users.push(newUser);
+        usersInfo.push(newUserInfo);
     }
     
     function login(string email, string password) constant returns(string userName, address walletAddress) {
@@ -88,6 +100,7 @@ contract Campaign {
     uint public mMinimumContribution;
     uint public mGoal;
     uint public mBacked;
+    uint public mRest;
     string public mInvestmentDescription;
     
 
@@ -130,7 +143,7 @@ contract Campaign {
         }
 
         mBacked += msg.value;
-        
+        mRest += msg.value;
     }
     
     function updateInvestmentDetail (string investmentDescription) public restricted {
@@ -165,18 +178,19 @@ contract Campaign {
     function finalizeRequest(uint index) public payable restricted {
         Request storage request = mRequests[index];
         
+        require(mRest >= request.value);
         require(request.approvalCount > (mInvestorsCount/2));
         require(!request.complete);
         
         request.recipient.transfer(request.value);
         request.complete = true;
-        
+        mRest -= request.value;
     }
 
     function getCampaignInfo() constant public returns (address manager,
                                 string title, string description,
                                 string videoFile, uint minimumContribution,
-                                uint goal, string investmentDescription, uint backed,
+                                uint goal, string investmentDescription, uint backed, uint rest,
                                 uint investorCount){
         return (
             mManager,
@@ -187,11 +201,22 @@ contract Campaign {
             mGoal,
             mInvestmentDescription,
             mBacked,
+            mRest,
             mInvestorsCount
         );
     }
+
+    function getDetailCampaignInfo() constant public returns (string title, string imageUrl, uint backed, uint goal, uint rest) {
+        return (
+            mTitle,
+            mImageFile,
+            mBacked,
+            mGoal,
+            mRest
+        );
+    }
     
-    function getRequestsCount() constant public isContributor returns(uint requestCount) {
+    function getRequestsCount() constant public returns(uint requestCount) {
         return mRequests.length;
     }
 

@@ -20,9 +20,11 @@ class CampaignShow extends Component {
         campaign: '',
         address: '',
         backed: '',
+        rest : '',
         investorCount: '',
         userWalletAddress: '',
-        isBacker : false
+        isBacker : false,
+        isManager : false
     }
 
     async componentDidMount() {
@@ -31,13 +33,14 @@ class CampaignShow extends Component {
 
         const user = JSON.parse(localStorage.getItem("user"))
         if (user != null) {
+            let isManager = info['manager'] == user.walletAddress;
             let isBacker = await campaign.methods.mInvestors(user.walletAddress).call();
-            this.setState({userWalletAddress : user.walletAddress, isBacker : isBacker != 0})
+            this.setState({userWalletAddress : user.walletAddress, isBacker : isBacker != 0, isManager : isManager})
             
         }
 
         const videoId = this.YouTubeGetID(info['videoFile']);
-        
+
         this.setState({
             manager: info['manager'],
             title: info['title'],
@@ -47,6 +50,7 @@ class CampaignShow extends Component {
             minimumContribution: info['minimumContribution'],
             goal: web3.utils.fromWei(info['goal'], 'ether'),
             backed: web3.utils.fromWei(info['backed'], 'ether'),
+            rest :  web3.utils.fromWei(info['rest'], 'ether'),
             investorCount: info['investorCount']
         })
 
@@ -73,6 +77,9 @@ class CampaignShow extends Component {
         console.log('minimumContribution : ', this.state.minimumContribution)
         console.log('Goal : ', this.state.goal)
         console.log('Backed : ', this.state.backed)
+        console.log('Backer : ', this.state.isBacker)
+        console.log('Rest : ', this.state.rest)        
+        console.log('Is Manager : ', this.state.isManager)                
         console.log('Investor Count : ', this.state.investorCount)
 
         return (
@@ -101,21 +108,26 @@ class CampaignShow extends Component {
                                 <div style={{ color: 'black', 'font-size': '30px' }}>{this.state.investorCount}</div>
                                 <div style={{ marginTop: '10px' }}>backers</div>
                                 <br />
+                                <div style={{ color: 'black', 'font-size': '30px' }}>{this.state.rest}</div>
+                                <div style={{ marginTop: '10px' }}>Rest Amount</div>
+                                <br />
                                 <Link route={`/campaigns/${this.props.url.query.address}/back`}>
                                     <a>
                                         <Button primary>Back this project</Button>
                                     </a>
                                 </Link>
 
-                                <div style={{ marginTop: '30px' }}>
+                                {/* <div style={{ marginTop: '30px' }}>
                                     <Button circular color='facebook' icon='facebook' />
                                     <Button circular color='twitter' icon='twitter' />
                                     <Button circular color='linkedin' icon='linkedin' />
                                     <Button circular color='google plus' icon='google plus' />
-                                </div>
-                                <br />
+                                </div> */}
 
-                                {this.state.isBacker ? <Link route={`/campaigns/${this.props.url.query.address}/requests`}>
+                                <br />
+                                <br />
+                            
+                                {(this.state.isBacker || this.state.isManager) ? <Link route={`/campaigns/${this.props.url.query.address}/requests`}>
                                     <a>
                                         <Button color='yellow'>Request</Button>
                                     </a>
